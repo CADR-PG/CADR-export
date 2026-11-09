@@ -1,0 +1,98 @@
+import { JSX } from 'react';
+
+import BoxController from '../components/editor/geometries/BoxController';
+import CapsuleController from '../components/editor/geometries/CapsuleController';
+import CircleController from '../components/editor/geometries/CircleController';
+import ConeController from '../components/editor/geometries/ConeController';
+import CylinderController from '../components/editor/geometries/CylinderController';
+import DodecahedronController from '../components/editor/geometries/DodecahedronController';
+import ExtrudeController from '../components/editor/geometries/ExtrudeController';
+import LatheController from '../components/editor/geometries/LatheController';
+import OctahedronController from '../components/editor/geometries/OctahedronController';
+import PlaneController from '../components/editor/geometries/PlaneController';
+import SphereController from '../components/editor/geometries/SphereController';
+import TetrahedronController from '../components/editor/geometries/TetrahedronController';
+import TorusController from '../components/editor/geometries/TorusController';
+
+import BasicMaterial from '../components/editor/materials/BasicMaterial';
+import DepthMaterial from '../components/editor/materials/DepthMaterial';
+import LambertMaterial from '../components/editor/materials/LambertMaterial';
+import MatcapMaterial from '../components/editor/materials/MatcapMaterial';
+import NormalMaterial from '../components/editor/materials/NormalMaterial';
+import PhongMaterial from '../components/editor/materials/PhongMaterial';
+import PhysicalMaterial from '../components/editor/materials/PhysicalMaterial';
+import StandardMaterial from '../components/editor/materials/StandardMaterial';
+import ToonMaterial from '../components/editor/materials/ToonMaterial';
+import DirectionalLightController from '../components/editor/lights/DirectionalLightController';
+import PointLightController from '../components/editor/lights/PointLightController';
+import RectAreaLightController from '../components/editor/lights/RectAreaLightController';
+import HemisphereLightController from '../components/editor/lights/HemisphereLightController';
+import AmbientLightController from '../components/editor/lights/AmbientLightController';
+import SpotLightController from '../components/editor/lights/SpotLightController';
+import CuboidColliderController from '../components/editor/colliders/CuboidColliderController';
+import BallColliderController from '../components/editor/colliders/BallColliderController';
+import CapsuleColliderController from '../components/editor/colliders/CapsuleColliderController';
+import ConeColliderController from '../components/editor/colliders/ConeColliderController';
+import RoundConeColliderController from '../components/editor/colliders/RoundConeColliderController';
+import CylinderColliderController from '../components/editor/colliders/CylinderColliderController';
+import RoundCuboidColliderController from '../components/editor/colliders/RoundCuboidColliderController';
+import RoundCylinderColliderController from '../components/editor/colliders/RoundCylinderColliderController';
+import AudioController from '../components/editor/audio/AudioController';
+import PositionalAudioController from '../components/editor/audio/PositionalAudioController';
+import CameraController from '../components/editor/CameraController';
+import NavMeshController from '@/components/editor/NavMeshController';
+
+interface ComponentToElement {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [name: string]: (...args: any[]) => JSX.Element | undefined | null;
+}
+
+const ComponentNames: ComponentToElement = {
+  camera: CameraController,
+  box: BoxController,
+  capsule: CapsuleController,
+  circle: CircleController,
+  cone: ConeController,
+  cylinder: CylinderController,
+  dodecahedron: DodecahedronController,
+  extrude: ExtrudeController,
+  lathe: LatheController,
+  octahedron: OctahedronController,
+  plane: PlaneController,
+  sphere: SphereController,
+  tetrahedron: TetrahedronController,
+  torus: TorusController,
+
+  basic: BasicMaterial,
+  depth: DepthMaterial,
+  lambert: LambertMaterial,
+  matcap: MatcapMaterial,
+  normal: NormalMaterial,
+  phong: PhongMaterial,
+  physical: PhysicalMaterial,
+  standard: StandardMaterial,
+  toon: ToonMaterial,
+
+  directional: DirectionalLightController,
+  point: PointLightController,
+  rectarea: RectAreaLightController,
+  hemisphere: HemisphereLightController,
+  ambient: AmbientLightController,
+  spotlight: SpotLightController,
+
+  ballCollider: BallColliderController,
+  capsuleCollider: CapsuleColliderController,
+  coneCollider: ConeColliderController,
+  cuboidCollider: CuboidColliderController,
+  cylinderCollider: CylinderColliderController,
+  roundConeCollider: RoundConeColliderController,
+  roundCuboidCollider: RoundCuboidColliderController,
+  roundCylinderCollider: RoundCylinderColliderController,
+
+  audio: AudioController,
+  paudio: PositionalAudioController,
+
+  navmesh: NavMeshController,
+};
+
+export default ComponentNames;

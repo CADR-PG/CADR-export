@@ -1,0 +1,53 @@
+@use "../0-site/variables";
+
+.change-data {
+
+    &-hld {
+        max-width: 700px;
+        margin: 60px auto;
+        padding: 0 20px;
+    }
+
+    &-form {
+        margin-bottom: 18px;
+
+        &__text {
+            display: block;
+            font-size: 0.9rem;
+            color: variables.$c-text-secondary;
+            margin-bottom: 6px;
+
+            .dark & {
+                color: variables.$c-text-secondary-dark;
+            }
+        }
+        
+        .input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid variables.$c-border;
+            border-radius: 10px;
+            background: variables.$c-bg;
+            color: variables.$c-text;
+            font-size: 1rem;
+            transition: border 0.2s, box-shadow 0.2s;
+
+            .dark & {
+                background: variables.$c-bg-dark;
+                color: variables.$c-text-dark;
+                border: 1px solid variables.$c-border-dark;
+            }
+        }
+    }
+
+    &__title {
+        font-size: 1.4rem;
+        margin-bottom: 16px;
+        border-bottom: 1px solid variables.$c-border;
+        padding-bottom: 10px;
+
+        .dark & {
+            border-bottom: 1px solid variables.$c-border-dark;
+        }
+    }
+}

@@ -1,0 +1,59 @@
+import ControllerProps from '../types/ControllerProps';
+import { useMesh } from '../hooks/useMesh';
+import TransformControlsController from './editor/TransformControlsController';
+import RigidBodyController from './editor/RigidBodyController';
+import { Select } from '@react-three/postprocessing';
+import useComponents from '../hooks/useComponents';
+import { ReactNode, useMemo } from 'react';
+import { MeshContext } from '@/data/MeshContext';
+import { useEditorContext } from '@/hooks/useEditorContext';
+import useWorldTransform from '@/hooks/useWorldTransform';
+import { isInvisible, isNestedScene } from '@/engine/Hierarchy';
+
+interface MeshControllerTemplateProps {
+  children: ReactNode;
+}
+
+export default function MeshControllerTemplate({
+  entity,
+  children,
+}: ControllerProps & MeshControllerTemplateProps) {
+  const { ColliderComponent, object, setRef } = useComponents(entity);
+  const { hovered } = useMesh(entity);
+  const { running } = useEditorContext();
+  const t = useWorldTransform(entity);
+  const ctx = useMemo(() => ({ object, setRef }), [object, setRef]);
+
+  return (
+    <MeshContext.Provider value={ctx}>
+      {!running && !isNestedScene(entity) && (
+        <TransformControlsController entity={entity} />
+      )}
+      {!isInvisible(entity) && (
+        <>
+          {!running ? (
+            <Select enabled={hovered === entity}>{children}</Select>
+          ) : (
+            children
+          )}
+          {running ? (
+            <RigidBodyController entity={entity}>
+              <ColliderComponent entity={entity} />
+            </RigidBodyController>
+          ) : (
+            /* Show colliders in editor view. If game is running,
+             * RigidBodyController should take that responsibility */
+            <object3D
+              position={t.position}
+              rotation={t.rotation}
+              scale={t.scale}
+              visible={false}
+            >
+              <ColliderComponent entity={entity} />
+            </object3D>
+          )}
+        </>
+      )}
+    </MeshContext.Provider>
+  );
+}

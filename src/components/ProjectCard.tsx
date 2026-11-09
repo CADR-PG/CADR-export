@@ -1,0 +1,167 @@
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import ProjectData from '../types/ProjectData';
+import thumbnail from '../assets/thumbnail.jpg';
+import useEditProject from '../hooks/useEditProject';
+import useDeleteProject from '../hooks/useDeleteProject';
+import Modal from '../modals/ManageProjectModal';
+import DeleteProjectModal from '../modals/DeleteProjectModal';
+
+interface ProjectCardProps {
+  project: ProjectData;
+}
+
+export default function ProjectCard({ project }: ProjectCardProps) {
+  const navigate = useNavigate();
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const deleteProject = useDeleteProject();
+  const editProject = useEditProject();
+  const deleting = deleteProject.status === 'pending';
+
+  const redirect = (uuid: string) => {
+    navigate(`/editor/${uuid}`);
+  };
+
+  const handleEditOpen = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setEditOpen(true);
+  };
+
+  const handleEditClose = () => {
+    setEditOpen(false);
+  };
+
+  const handleEditSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const name = String(data.get('name') || '').trim();
+    const description = String(data.get('description') || '').trim();
+
+    if (!name) return;
+    editProject.mutate(
+      { uuid: project.id, data: { name, description } },
+      {
+        onSuccess: () => {
+          setEditOpen(false);
+        },
+      },
+    );
+  };
+
+  const handleDeleteOpen = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setDeleteOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
+  };
+
+  const handleDeleteConfirm = (e?: React.MouseEvent<HTMLElement>) => {
+    if (e) e.stopPropagation();
+    deleteProject.mutate(project.id, {
+      onSuccess: () => {
+        setDeleteOpen(false);
+      },
+    });
+  };
+
+  return (
+    <>
+      <div className="dashboard-item">
+        <img src={thumbnail} alt="box" className="project-thumbnail" />
+        <div className="scene-content">
+          <div className="scene-info">
+            <h3>{project.name}</h3>
+            <p>
+              {'Modified: ' +
+                new Date(project.lastUpdate).toLocaleDateString('en-GB')}
+            </p>
+          </div>
+          <div className="scene-actions">
+            <button
+              className="btn-small"
+              onClick={(e) => {
+                e.stopPropagation();
+                redirect(project.id);
+              }}
+            >
+              Open
+            </button>
+            <button
+              className="btn-small"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEditOpen(e);
+              }}
+            >
+              Edit
+            </button>
+            <button
+              className="btn-small"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteOpen(e);
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <Modal open={editOpen} onClose={handleEditClose} title="Edit scene">
+        <form onSubmit={handleEditSubmit}>
+          <div className="form-row">
+            <label htmlFor={`name-${project.id}`} className="form-label">
+              Name
+            </label>
+            <input
+              id={`name-${project.id}`}
+              name="name"
+              defaultValue={project.name}
+              className="input"
+              type="text"
+              required
+              autoFocus
+            />
+          </div>
+          <div className="form-row">
+            <label htmlFor={`desc-${project.id}`} className="form-label">
+              Description
+            </label>
+            <input
+              id={`desc-${project.id}`}
+              name="description"
+              defaultValue={project.description || ''}
+              className="input"
+              type="text"
+            />
+          </div>
+
+          <div className="modal-actions">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleEditClose}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="btn btn-primary">
+              Save
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      <DeleteProjectModal
+        open={deleteOpen}
+        onClose={handleDeleteClose}
+        projectName={project.name}
+        onConfirm={handleDeleteConfirm}
+        deleting={deleting}
+      />
+    </>
+  );
+}
